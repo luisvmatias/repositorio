@@ -11,7 +11,7 @@ export default function Home({navigation, route}) {
       <Text>Home</Text>
       <Text>Home</Text>
       <Text>Home</Text>
-      <Text>Home</Text>
+      <Text>Homer</Text>
       <Button 
       mode='contained' 
       onPress= {() => navigation.navigate('Feed', {id: 1, nome:"Luís"})}>
