@@ -35,7 +35,7 @@ export default function HomeScreen() {
       )}
       ListEmptyComponent={() => (
         <View style={styles.loadingContainer}> 
-            <ActivityIndicator />
+            <ActivityIndicator animating={true} color={MD2Colors.red800} size={80} />
             <Text variant='titleLarge'> Aguarde...</Text>
         </View>
       )}
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     },
     loadingContainer:{
         height: 500,
-        alignItems: 'center'
-
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
