@@ -5,14 +5,14 @@ import axios from 'axios';
 
 const ListaProdutosScreen = ({ route, navigation }) => {
   const { categoria } = route.params;
-  const [products, setProducts] = useState([]); // Estado para armazenar os produtos
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`https://dummyjson.com/products/category/${categoria}`);
-        setProducts(response.data.products); // Armazena os produtos no estado
+        setProducts(response.data.products);
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -60,7 +60,7 @@ const ListaProdutosScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={products} // Usando o estado products aqui
+        data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}

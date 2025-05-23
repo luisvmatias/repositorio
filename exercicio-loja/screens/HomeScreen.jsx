@@ -7,7 +7,6 @@ const HomeScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Lista completa de categorias como fallback
   const allCategories = [
     'smartphones', 'laptops', 'fragrances', 'skincare', 
     'groceries', 'home-decoration', 'furniture', 'tops', 
@@ -22,9 +21,8 @@ const HomeScreen = ({ navigation }) => {
       try {
         const response = await axios.get('https://dummyjson.com/products/categories');
         
-        console.log('API Response:', response.data); // Verifique no console
+        console.log('API Response:', response.data);
         
-        // Processamento seguro dos dados
         let apiCategories = [];
         
         if (response.data && Array.isArray(response.data)) {
@@ -32,7 +30,6 @@ const HomeScreen = ({ navigation }) => {
             .filter(item => typeof item === 'string' && item.trim() !== '');
         }
 
-        // Combina categorias da API com a lista completa, removendo duplicatas
         const combinedCategories = [...new Set([...apiCategories, ...allCategories])];
         
         setCategories(
@@ -44,7 +41,6 @@ const HomeScreen = ({ navigation }) => {
 
       } catch (error) {
         console.error('Erro na API:', error);
-        // Usa a lista completa como fallback
         setCategories(
           allCategories.map((cat, index) => ({
             id: `cat-${index}`,
@@ -73,7 +69,6 @@ const HomeScreen = ({ navigation }) => {
     </TouchableRipple>
   );
 
-  // Função segura para formatar nomes
   const formatCategoryName = (name) => {
     if (typeof name !== 'string') return 'Categoria';
     return name

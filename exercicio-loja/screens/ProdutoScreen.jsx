@@ -41,7 +41,6 @@ const ProdutoScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* View wrapper para corrigir o problema do shadow */}
       <View style={styles.cardWrapper}>
         <Card style={styles.card}>
           <Image
@@ -75,7 +74,6 @@ const ProdutoScreen = ({ route, navigation }) => {
         </Card>
       </View>
 
-      {/* Galeria de imagens - modificada para exibir sem cortes */}
       <View style={styles.gallery}>
         {product.images.map((image, index) => (
           <View key={index} style={styles.imageContainer}>
@@ -166,8 +164,8 @@ const styles = StyleSheet.create({
   },
   galleryImage: {
     width: '100%',
-    height: 300, // Altura fixa para todas as imagens
-    aspectRatio: 1, // Mantém a proporção da imagem
+    height: 300, 
+    aspectRatio: 1,
   },
 });
 
