@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { FlatList } from 'react-native-gesture-handler'
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation, route }) {
     const [usuarios, setUsuarios] = useState([])
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export default function HomeScreen() {
       <FlatList
       data={usuarios}
       renderItem={ ({ item}) => (
-        <Card>
+        <Card style={{margin:5}} onPress={() => navigation.navigate('UsuarioScreen', item.id)}> 
             <Card.Title 
             title={item.firstName + " " + item.lastName}
             subtitle= {item.email}
