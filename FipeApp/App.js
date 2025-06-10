@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
-import VeiculoStack from './stacks/VeiculoStack';
+import MainNavigator from './stacks/MainNavigator';
 
 export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <VeiculoStack />
+        <MainNavigator />
       </NavigationContainer>
     </PaperProvider>
   );

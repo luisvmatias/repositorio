@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
-import { Button, Card, Text, TextInput, RadioButton, List } from 'react-native-paper';
+import { Button, Card, Text, RadioButton, List } from 'react-native-paper';
 import VeiculoService from './VeiculoService';
+import * as Notifications from 'expo-notifications';
 
 export default function VeiculoForm({ navigation, route }) {
   const veiculoFavorito = route.params?.veiculo || null;
-  
+
   const [tipoVeiculo, setTipoVeiculo] = useState(veiculoFavorito?.tipoVeiculo || 'carros');
   const [marca, setMarca] = useState(veiculoFavorito?.marca || null);
   const [modelo, setModelo] = useState(veiculoFavorito?.modelo || null);
   const [ano, setAno] = useState(veiculoFavorito?.ano || null);
-  
+
   const [marcas, setMarcas] = useState([]);
   const [modelos, setModelos] = useState([]);
   const [anos, setAnos] = useState([]);
-  
+
   const [loading, setLoading] = useState(false);
   const [veiculoDetalhes, setVeiculoDetalhes] = useState(null);
 
-  // Carrega marcas quando o tipo de veículo muda
   useEffect(() => {
     const carregarMarcas = async () => {
       setLoading(true);
@@ -36,11 +36,10 @@ export default function VeiculoForm({ navigation, route }) {
         setLoading(false);
       }
     };
-    
+
     carregarMarcas();
   }, [tipoVeiculo]);
 
-  // Carrega modelos quando a marca é selecionada
   useEffect(() => {
     const carregarModelos = async () => {
       if (marca) {
@@ -58,11 +57,10 @@ export default function VeiculoForm({ navigation, route }) {
         }
       }
     };
-    
+
     carregarModelos();
   }, [marca]);
 
-  // Carrega anos quando o modelo é selecionado
   useEffect(() => {
     const carregarAnos = async () => {
       if (modelo) {
@@ -78,7 +76,7 @@ export default function VeiculoForm({ navigation, route }) {
         }
       }
     };
-    
+
     carregarAnos();
   }, [modelo]);
 
@@ -87,7 +85,7 @@ export default function VeiculoForm({ navigation, route }) {
       alert('Selecione marca, modelo e ano para consultar');
       return;
     }
-    
+
     setLoading(true);
     try {
       const detalhes = await VeiculoService.consultarVeiculo(
@@ -96,13 +94,13 @@ export default function VeiculoForm({ navigation, route }) {
         modelo.codigo,
         ano.codigo
       );
-      
+
       setVeiculoDetalhes({
         ...detalhes,
         tipoVeiculo,
         marca,
         modelo,
-        ano
+        ano,
       });
     } catch (error) {
       console.error(error);
@@ -114,11 +112,26 @@ export default function VeiculoForm({ navigation, route }) {
 
   const salvarFavorito = async () => {
     if (!veiculoDetalhes) return;
-    
+
     try {
       await VeiculoService.salvarFavorito(veiculoDetalhes);
+
+      // ✅ Notificação push após salvar
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Veículo salvo com sucesso!',
+          body: `${veiculoDetalhes.Marca} ${veiculoDetalhes.Modelo} foi salvo nos favoritos.`,
+        },
+        trigger: { seconds: 2 },
+      });
+
       alert('Veículo salvo como favorito!');
-      navigation.navigate('VeiculoLista');
+
+      // ✅ Volta para a aba "Favoritos"
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Favoritos' }],
+      });
     } catch (error) {
       console.error(error);
       alert('Erro ao salvar favorito');
@@ -142,13 +155,15 @@ export default function VeiculoForm({ navigation, route }) {
           {loading && <ActivityIndicator style={styles.loading} />}
 
           <Text style={styles.sectionTitle}>Marca</Text>
-          <Button 
-            mode="outlined" 
-            onPress={() => navigation.navigate('Selection', {
-              title: 'Selecione a Marca',
-              items: marcas.map(m => ({ label: m.nome, value: m })),
-              onSelect: setMarca
-            })}
+          <Button
+            mode="outlined"
+            onPress={() =>
+              navigation.navigate('Selection', {
+                title: 'Selecione a Marca',
+                items: marcas.map((m) => ({ label: m.nome, value: m })),
+                onSelect: setMarca,
+              })
+            }
             disabled={loading}
           >
             {marca ? marca.nome : 'Selecione uma marca'}
@@ -157,13 +172,15 @@ export default function VeiculoForm({ navigation, route }) {
           {marca && (
             <>
               <Text style={styles.sectionTitle}>Modelo</Text>
-              <Button 
-                mode="outlined" 
-                onPress={() => navigation.navigate('Selection', {
-                  title: 'Selecione o Modelo',
-                  items: modelos.map(m => ({ label: m.nome, value: m })),
-                  onSelect: setModelo
-                })}
+              <Button
+                mode="outlined"
+                onPress={() =>
+                  navigation.navigate('Selection', {
+                    title: 'Selecione o Modelo',
+                    items: modelos.map((m) => ({ label: m.nome, value: m })),
+                    onSelect: setModelo,
+                  })
+                }
                 disabled={loading}
               >
                 {modelo ? modelo.nome : 'Selecione um modelo'}
@@ -174,13 +191,15 @@ export default function VeiculoForm({ navigation, route }) {
           {modelo && (
             <>
               <Text style={styles.sectionTitle}>Ano</Text>
-              <Button 
-                mode="outlined" 
-                onPress={() => navigation.navigate('Selection', {
-                  title: 'Selecione o Ano',
-                  items: anos.map(a => ({ label: a.nome, value: a })),
-                  onSelect: setAno
-                })}
+              <Button
+                mode="outlined"
+                onPress={() =>
+                  navigation.navigate('Selection', {
+                    title: 'Selecione o Ano',
+                    items: anos.map((a) => ({ label: a.nome, value: a })),
+                    onSelect: setAno,
+                  })
+                }
                 disabled={loading}
               >
                 {ano ? ano.nome : 'Selecione um ano'}
@@ -189,8 +208,8 @@ export default function VeiculoForm({ navigation, route }) {
           )}
 
           {ano && (
-            <Button 
-              mode="contained" 
+            <Button
+              mode="contained"
               onPress={consultarVeiculo}
               style={styles.button}
               disabled={loading}
@@ -225,9 +244,9 @@ export default function VeiculoForm({ navigation, route }) {
               description={veiculoDetalhes.Combustivel}
               left={() => <List.Icon icon="fuel" />}
             />
-            
-            <Button 
-              mode="contained" 
+
+            <Button
+              mode="contained"
               onPress={salvarFavorito}
               style={styles.button}
               icon="star"
