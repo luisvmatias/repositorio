@@ -110,31 +110,37 @@ export default function VeiculoForm({ navigation, route }) {
     }
   };
 
-  const salvarFavorito = async () => {
-    if (!veiculoDetalhes) return;
+const salvarFavorito = async () => {
+  if (!veiculoDetalhes) return;
 
-    try {
+  try {
+    if (veiculoFavorito?.id) {
+      // Edição
+      await VeiculoService.atualizarFavorito(veiculoFavorito.id, veiculoDetalhes);
+    } else {
+      // Novo
       await VeiculoService.salvarFavorito(veiculoDetalhes);
-
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: 'Veículo salvo com sucesso!',
-          body: `${veiculoDetalhes.Marca} ${veiculoDetalhes.Modelo} foi salvo nos favoritos.`,
-        },
-        trigger: { seconds: 2 },
-      });
-
-      alert('Veículo salvo como favorito!');
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Favoritos' }],
-      });
-    } catch (error) {
-      console.error(error);
-      alert('Erro ao salvar favorito');
     }
-  };
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Veículo salvo com sucesso!',
+        body: `${veiculoDetalhes.Marca} ${veiculoDetalhes.Modelo} foi salvo nos favoritos.`,
+      },
+      trigger: { seconds: 2 },
+    });
+
+    alert('Veículo salvo como favorito!');
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Favoritos' }],
+    });
+  } catch (error) {
+    console.error(error);
+    alert('Erro ao salvar favorito');
+  }
+};
 
   return (
     <ScrollView style={styles.container}>

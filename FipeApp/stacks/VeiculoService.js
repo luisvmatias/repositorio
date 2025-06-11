@@ -9,10 +9,18 @@ async function listarFavoritos() {
 }
 
 async function salvarFavorito(veiculo) {
-  veiculo.id = new Date().getTime();
+  veiculo.id = new Date().getTime(); // Cria ID novo
   const favoritos = await listarFavoritos();
   favoritos.push(veiculo);
   await AsyncStorage.setItem('@veiculos_favoritos', JSON.stringify(favoritos));
+}
+
+async function atualizarFavorito(id, novosDados) {
+  const favoritos = await listarFavoritos();
+  const atualizados = favoritos.map(veiculo =>
+    veiculo.id === id ? { ...veiculo, ...novosDados, id } : veiculo
+  );
+  await AsyncStorage.setItem('@veiculos_favoritos', JSON.stringify(atualizados));
 }
 
 async function removerFavorito(id) {
@@ -22,51 +30,32 @@ async function removerFavorito(id) {
 }
 
 async function listarMarcas(tipoVeiculo) {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar marcas:', error);
-    throw error;
-  }
+  const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas`);
+  return response.data;
 }
 
 async function listarModelos(tipoVeiculo, marcaId) {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas/${marcaId}/modelos`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar modelos:', error);
-    throw error;
-  }
+  const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas/${marcaId}/modelos`);
+  return response.data;
 }
 
 async function listarAnos(tipoVeiculo, marcaId, modeloId) {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas/${marcaId}/modelos/${modeloId}/anos`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar anos:', error);
-    throw error;
-  }
+  const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas/${marcaId}/modelos/${modeloId}/anos`);
+  return response.data;
 }
 
 async function consultarVeiculo(tipoVeiculo, marcaId, modeloId, anoId) {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas/${marcaId}/modelos/${modeloId}/anos/${anoId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao consultar veículo:', error);
-    throw error;
-  }
+  const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas/${marcaId}/modelos/${modeloId}/anos/${anoId}`);
+  return response.data;
 }
 
 export default {
   listarFavoritos,
   salvarFavorito,
+  atualizarFavorito,
   removerFavorito,
   listarMarcas,
   listarModelos,
   listarAnos,
-  consultarVeiculo
+  consultarVeiculo,
 };
