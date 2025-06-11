@@ -115,10 +115,10 @@ const salvarFavorito = async () => {
 
   try {
     if (veiculoFavorito?.id) {
-      // Edição
+   
       await VeiculoService.atualizarFavorito(veiculoFavorito.id, veiculoDetalhes);
     } else {
-      // Novo
+
       await VeiculoService.salvarFavorito(veiculoDetalhes);
     }
 
