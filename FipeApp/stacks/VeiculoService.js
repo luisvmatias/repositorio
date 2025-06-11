@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://parallelum.com.br/fipe/api/v1';
 
-// Operações locais
 async function listarFavoritos() {
   const jsonValue = await AsyncStorage.getItem('@veiculos_favoritos');
   return jsonValue != null ? JSON.parse(jsonValue) : [];
@@ -22,7 +21,6 @@ async function removerFavorito(id) {
   await AsyncStorage.setItem('@veiculos_favoritos', JSON.stringify(novaLista));
 }
 
-// Consulta à API FIPE
 async function listarMarcas(tipoVeiculo) {
   try {
     const response = await axios.get(`${API_BASE_URL}/${tipoVeiculo}/marcas`);

@@ -9,7 +9,6 @@ import { Ionicons } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-// Stack para consulta e seleção
 function ConsultaStack() {
   return (
     <Stack.Navigator>
@@ -27,7 +26,6 @@ function ConsultaStack() {
   );
 }
 
-// Stack para lista de favoritos e edição
 function FavoritosStack() {
   return (
     <Stack.Navigator>

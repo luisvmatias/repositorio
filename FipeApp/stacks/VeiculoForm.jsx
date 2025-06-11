@@ -116,7 +116,6 @@ export default function VeiculoForm({ navigation, route }) {
     try {
       await VeiculoService.salvarFavorito(veiculoDetalhes);
 
-      // ✅ Notificação push após salvar
       await Notifications.scheduleNotificationAsync({
         content: {
           title: 'Veículo salvo com sucesso!',
@@ -127,7 +126,6 @@ export default function VeiculoForm({ navigation, route }) {
 
       alert('Veículo salvo como favorito!');
 
-      // ✅ Volta para a aba "Favoritos"
       navigation.reset({
         index: 0,
         routes: [{ name: 'Favoritos' }],
